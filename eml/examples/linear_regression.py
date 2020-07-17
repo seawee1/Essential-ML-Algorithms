@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats.mstats import spearmanr
 
-from eml.supervised.regression import LinearRegression
+from eml.supervised_learning.regression import LinearRegression
 
 def main():
     # Load data

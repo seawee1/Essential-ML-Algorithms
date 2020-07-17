@@ -25,19 +25,24 @@ def main():
     mse = (1/X_test.shape[0]) * np.sum((y_test - y_pred)**2)
 
     # Plot learning curve
-    fig, (ax1, ax2) = plt.subplots(2)
-    ax1.plot(np.arange(n_iter), model.loss_history, color='black', linewidth=2)
-    ax1.set_title("Linear Regression (Testset MSE: %.2f)" % mse, fontsize=12)
-    ax1.set_xlabel("Iteration")
-    ax1.set_ylabel("MSE")
+    #fig, (ax1, ax2) = plt.subplots(2)
+    plt.figure(0)
+    plt.plot(np.arange(n_iter), model.loss_history, color='black', linewidth=2)
+    plt.title("Learning Curve (Testset MSE: %.2f)" % mse, fontsize=12)
+    plt.xlabel("Iteration")
+    plt.ylabel("MSE")
+    plt.show(block=False)
+
     # Plot predictions
+    plt.figure(1)
     cmap = plt.get_cmap('viridis')
-    m1 = ax2.scatter(X_train, y_train, color=cmap(0.9), s=10)
-    m2 = ax2.scatter(X_test, y_test, color=cmap(0.5), s=10)
-    ax2.plot(X_test, y_pred, color='black', linewidth=2, label="Prediction")
-    ax2.set_xlabel('x')
-    ax2.set_ylabel('y')
-    ax2.legend((m1, m2), ("Training data", "Test data"), loc='lower right')
+    m1 = plt.scatter(X_train, y_train, color=cmap(0.9), s=10)
+    m2 = plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
+    plt.plot(X_test, y_pred, color='black', linewidth=2, label="Prediction")
+    plt.title("Prediction", fontsize=12)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend((m1, m2), ("Training data", "Test data"), loc='lower right')
     plt.show()
 
 if __name__ == '__main__':

@@ -17,7 +17,8 @@ def main():
 
     # Train model
     n_iter=10000
-    model = LinearRegression(n_iter=n_iter, lr=0.001)
+    lr = 0.001
+    model = LinearRegression(n_iter=n_iter, lr=lr)
     model.fit(X_train, y_train)
 
     # Test model
@@ -27,7 +28,7 @@ def main():
     # Plot learning curve
     #fig, (ax1, ax2) = plt.subplots(2)
     plt.figure(0)
-    plt.plot(np.arange(n_iter), model.loss_history, color='black', linewidth=2)
+    plt.plot(np.arange(n_iter), model.learning_curve, color='black', linewidth=2)
     plt.title("Learning Curve (Testset MSE: %.2f)" % mse, fontsize=12)
     plt.xlabel("Iteration")
     plt.ylabel("MSE")

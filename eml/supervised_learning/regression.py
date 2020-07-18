@@ -23,7 +23,7 @@ class LinearRegression():
             grad_w = np.multiply(-X, (2*(y - y_pred)).reshape((-1,1)))
             grad_w = (1.0/X.shape[0]) * np.sum(grad_w, axis=0)
 
-            # Update weights
+            # Gradient descent
             self.w = self.w - (grad_w * self.lr)
 
     def predict(self, X):

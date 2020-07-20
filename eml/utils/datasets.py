@@ -1,23 +1,33 @@
 import numpy as np
-from numpy.random import multivariate_normal
+from numpy.random import multivariate_normal, rand
 
-def binary_classification(n_samples=1000):
-    # Sample datapoints
-    X_0 = multivariate_normal([-1, 1], [[1, 0],[0,1]], int(n_samples/2))
-    X_1 = multivariate_normal([1, -1], [[1, 0],[0,1]], int(n_samples/2))
-    X = np.vstack((X_0, X_1))
-
-    # Create labels
-    y = np.zeros((1000,))
-    y[int(n_samples/2):] = 1
+def gaussians_2d(n_classes, samples_per_class, mean_covs):
+    print(mean_covs[0])
+    X = np.vstack([multivariate_normal(mean_covs[i][0], mean_covs[i][1], samples_per_class) for i in range(n_classes)])
+    y = np.array([[i] * samples_per_class for i in range(n_classes)]).flatten()
 
     # Shuffle
-    idx = np.arange(1000)
+    idx = np.arange(len(X))
     np.random.shuffle(idx)
-    X = X[idx]
-    y = y[idx]
+    X, y = X[idx], y[idx]
 
     return X, y
+
+def binary_classification(n_samples=1000):
+    mean_covs = [
+        [[-1, 1], [[1, 0],[0,1]]],
+        [[1, -1], [[1, 0],[0,1]]]
+    ]
+    return gaussians_2d(2, 500, mean_covs)
+
+def classification_gaussians():
+    mean_covs = [
+        [[4, 5], [[2, -0.6],[-0.6, 1]]],
+        [[-4, 3], [[1.5, 0],[0, 2]]],
+        [[-4, -2], [[2, 0.9],[0.9, 0.5]]],
+        [[4, 0], [[1, -0.1],[-0.1, 0.5]]],
+    ]
+    return gaussians_2d(4, 100, mean_covs)
 
 def linear_regression(n_samples=100):
     data = multivariate_normal([0, 0], [[2, 0.8], [0.8, 0.5]], n_samples)

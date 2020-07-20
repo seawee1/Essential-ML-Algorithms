@@ -32,7 +32,6 @@ class LogisticRegression():
 
             # Gradient descent
             self.w = self.w - (grad_w * self.lr)
-
     def predict(self, X):
         # Calculate sigmoid
         X = np.hstack((X, np.ones((X.shape[0], 1))))

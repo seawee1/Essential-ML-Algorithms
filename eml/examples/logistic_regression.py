@@ -1,7 +1,4 @@
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import numpy as np
 
 import eml.utils.datasets as datasets
 import eml.utils.plot as plot

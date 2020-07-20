@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
 
+def data(X, y):
+    cm = ListedColormap(['#FF0000', '#0000FF'])
+    plt.scatter(X[:,0], X[:,1], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
+
 def decision_regions(X, y, model, use_proba=True, resolution=100):
     # Colormaps
     cm = plt.cm.RdBu

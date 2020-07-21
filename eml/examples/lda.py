@@ -6,8 +6,8 @@ from eml.supervised_learning.discriminant_analysis import LinearDiscriminantAnal
 
 def main():
     X, y = datasets.classification_gaussians()
-    plot.data(X, y)
-    plt.show()
+    #plot.data(X, y)
+    #plt.show()
 
     # Train model
     n_iter=10000
@@ -16,8 +16,8 @@ def main():
     model.fit(X, y)
 
     # Show results
-    #plot.decision_regions(X, y, model)
-    #plt.show()
+    plot.decision_regions(X, y, model, use_proba=False)
+    plt.show()
 
 if __name__=='__main__':
     main()

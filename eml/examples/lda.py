@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 import eml.utils.datasets as datasets
 import eml.utils.plot as plot
-from eml.supervised_learning.discriminant_analysis import LinearDiscriminantAnalysis
+from eml.supervised_learning.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 
 def main():
     X, y = datasets.classification_gaussians()
@@ -13,6 +13,7 @@ def main():
     n_iter=10000
     lr = 0.001
     model = LinearDiscriminantAnalysis(n_iter=n_iter, lr=lr)
+    #model = QuadraticDiscriminantAnalysis(n_iter=n_iter, lr=lr)
     model.fit(X, y)
 
     # Show results

@@ -17,7 +17,7 @@ class DiscriminantAnalysis:
 
     def _compute_covariances(self, X_):
         # Estimate class centroids
-        centroids = np.mean(X_, axis=1)
+        centroids = np.array([np.mean(x, axis=0) for x in X_])
 
         # Class covariance matrices weighted by 1/(N_k - 1) (unbiased estimate)
         cov_ = [(1/(X_[i].shape[0]-1)) * (X_[i] - c).T.dot(X_[i] - c) for i, c in enumerate(centroids)]
@@ -26,10 +26,11 @@ class DiscriminantAnalysis:
 
         return cov, cov_, centroids
 
-    def _compute_scatter(self, X_):
+    def _compute_scatter(self, X_, X):
         # Estimate class centroids and data centroid
-        centroids = np.mean(X_, axis=1)
-        data_centroid = np.mean(X_, axis=(0,1))
+        centroids = np.array([np.mean(x, axis=0) for x in X_])
+        data_centroid = np.mean(X, axis=0)
+        print(data_centroid)
 
         # Between-class and within-class scatter matrices
         S_b = np.sum([X_[i].shape[0] *  np.outer(c - data_centroid, c-data_centroid) for i, c in enumerate(centroids)], axis=0)
@@ -53,7 +54,7 @@ class LinearDiscriminantAnalysis(DiscriminantAnalysis):
 
         if self.n_components < X.shape[1]:
             # Compute scatter matrices and solve Fisher eigenproblem
-            S_b, S_w = super()._compute_scatter(X_)
+            S_b, S_w = super()._compute_scatter(X_, X)
             w, V = linalg.eig(S_b, S_w)
             w, V = w.real, V.real
 

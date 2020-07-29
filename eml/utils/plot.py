@@ -4,16 +4,22 @@ import numpy as np
 
 def data(X, y, ax=None):
     cm = ListedColormap(['#FF0000', '#0000FF'])
-    if ax is None:
-        print('whut')
-    else:
-        print('Hi')
-
     ax = plt.gca() if ax is None else ax
+
     if X.shape[1] == 1:
         ax.scatter(X[:,0], np.zeros(X.shape[0]), c=y, cmap=cm, s=10, marker='o', edgecolor='black')
     else:
         ax.scatter(X[:,0], X[:,1], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
+
+def data_3d(X, y, ax):
+    cm = ListedColormap(['#FF0000', '#0000FF'])
+    print((y/(np.max(y))))
+    ax.scatter(X[:,0], X[:,1], X[:,2], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
+    ax.set_xlabel('X-axis')
+    ax.set_ylabel('Y-axis')
+    ax.set_zlabel('Z-axis')
+    #TODO: Same scale for Z-axis
+
 
 def decision_regions(X, y, model, ax=None, use_proba=True, resolution=500):
     # Colormaps

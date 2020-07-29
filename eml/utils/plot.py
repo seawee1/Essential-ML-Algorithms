@@ -2,14 +2,25 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
 
-def data(X, y):
+def data(X, y, ax=None):
     cm = ListedColormap(['#FF0000', '#0000FF'])
-    plt.scatter(X[:,0], X[:,1], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
+    if ax is None:
+        print('whut')
+    else:
+        print('Hi')
 
-def decision_regions(X, y, model, use_proba=True, resolution=500):
+    ax = plt.gca() if ax is None else ax
+    if X.shape[1] == 1:
+        ax.scatter(X[:,0], np.zeros(X.shape[0]), c=y, cmap=cm, s=10, marker='o', edgecolor='black')
+    else:
+        ax.scatter(X[:,0], X[:,1], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
+
+def decision_regions(X, y, model, ax=None, use_proba=True, resolution=500):
     # Colormaps
     cm = plt.cm.RdBu
     cm_bright = ListedColormap(['#FF0000', '#0000FF'])
+
+    ax = ax or plt.gca()
 
     # Create meshgrid to predict
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -25,7 +36,7 @@ def decision_regions(X, y, model, use_proba=True, resolution=500):
 
     # Draw decision regions
     Z = Z.reshape(xx.shape)
-    plt.contourf(xx, yy, Z, cmap=cm, alpha=0.7)
+    ax.contourf(xx, yy, Z, cmap=cm, alpha=0.7)
 
     # Plot training data
-    plt.scatter(X[:,0], X[:,1], c=y, cmap=cm_bright, s=10, marker='o', edgecolor='black')
+    ax.scatter(X[:,0], X[:,1], c=y, cmap=cm_bright, s=10, marker='o', edgecolor='black')

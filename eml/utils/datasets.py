@@ -9,19 +9,18 @@ def gaussians_2d(n_classes, samples_per_class, mean_covs):
     idx = np.arange(len(X))
     np.random.shuffle(idx)
     X, y = X[idx], y[idx]
-    print(set(y.tolist()))
 
     return X, y
 
-def binary_classification(n_samples=1000):
+def binary_gaussian(n_samples=1000):
     mean_covs = [
-        [[-1, 1], [[1, 0],[0,1]]],
-        [[1, -1], [[1, 0],[0,1]]]
+        [[-1, 1], [[1, 1],[1,2]]],
+        [[1, -1], [[1, 1],[1,2]]]
     ]
 
     return gaussians_2d(2, 500, mean_covs)
 
-def classification_gaussians(samples_per_class=500):
+def multi_gaussian(samples_per_class=500):
     mean_covs = [
         [[4, 5], [[2, -0.6],[-0.6, 1]]],
         [[-4, 7], [[1.5, 0],[0, 2]]],

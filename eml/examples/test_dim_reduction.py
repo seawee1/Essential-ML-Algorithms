@@ -16,7 +16,7 @@ datasets = [
     (make_classification(n_samples=300, n_features=3, n_redundant=0, n_informative=3, n_clusters_per_class=1, class_sep=2.0))]
 
 
-fig = plt.figure(figsize=(len(datasets)*5, (len(models) + 1) * 5))
+fig = plt.figure(figsize=((len(models) + 1) * 5, len(datasets)*5))
 
 for i, (X, y) in enumerate(datasets):
     # Plot data

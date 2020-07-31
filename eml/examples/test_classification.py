@@ -31,7 +31,7 @@ datasets = [
     (make_circles(n_samples=n_samples, noise=0.2, factor=0.5))
 ]
 
-fig = plt.figure(figsize=(len(datasets)*5, (len(models) + 1) * 5))
+fig = plt.figure(figsize=((len(models) + 1) * 5, len(datasets)*5))
 
 for i, (X, y) in enumerate(datasets):
     # Plot data

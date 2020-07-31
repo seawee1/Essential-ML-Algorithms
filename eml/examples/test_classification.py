@@ -50,4 +50,5 @@ for i, (X, y) in enumerate(datasets):
         if i == 0:
             ax.set_title(names[j])
 
+plt.savefig('img/classification.png')
 plt.show()

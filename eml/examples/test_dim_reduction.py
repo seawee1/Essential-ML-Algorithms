@@ -2,7 +2,6 @@ import numpy as np
 from sklearn.datasets import make_classification
 
 from eml.supervised_learning.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LinearDiscriminantAnalysis_sk
 
 import matplotlib.pyplot as plt
 import eml.utils.plot as plot
@@ -36,4 +35,6 @@ for i, (X, y) in enumerate(datasets):
         if i == 0:
             ax.set_title(names[j])
 
+plt.savefig('img/dim_reduction.png')
 plt.show()
+

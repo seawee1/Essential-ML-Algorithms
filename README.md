@@ -3,5 +3,11 @@ Implementation of essential (traditional) Machine Learning algorithms from scrat
 
 ## Executing example code
 ```shell
-python -m eml.examples.linear_regression
+python -m eml.examples.test_classification
 ```
+
+## Current implementation status
+### Classification
+![Classification](/img/classification.png)
+### Dimensionality reduction
+![Classification](/img/dim_reduction.png)

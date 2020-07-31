@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
 
-def data(X, y, ax=None):
-    cm = ListedColormap(['#FF0000', '#0000FF'])
+cm = ListedColormap(['#FF0000', '#0000FF'])
+cm_bright = ListedColormap(['#FF0000', '#0000FF'])
+
+def scatter_2d(X, y, ax=None):
     ax = plt.gca() if ax is None else ax
 
     if X.shape[1] == 1:
@@ -11,21 +13,15 @@ def data(X, y, ax=None):
     else:
         ax.scatter(X[:,0], X[:,1], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
 
-def data_3d(X, y, ax):
-    cm = ListedColormap(['#FF0000', '#0000FF'])
-    print((y/(np.max(y))))
+def scatter_3d(X, y, ax):
     ax.scatter(X[:,0], X[:,1], X[:,2], c=y, cmap=cm, s=10, marker='o', edgecolor='black')
     ax.set_xlabel('X-axis')
     ax.set_ylabel('Y-axis')
     ax.set_zlabel('Z-axis')
-    #TODO: Same scale for Z-axis
 
-
-def decision_regions(X, y, model, ax=None, use_proba=True, resolution=500):
+def decision_regions_2d(X, y, model, ax=None, use_proba=True, resolution=500):
     # Colormaps
     cm = plt.cm.RdBu
-    cm_bright = ListedColormap(['#FF0000', '#0000FF'])
-
     ax = ax or plt.gca()
 
     # Create meshgrid to predict

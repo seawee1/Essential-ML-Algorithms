@@ -19,7 +19,7 @@ def scatter_3d(X, y, ax):
     ax.set_ylabel('Y-axis')
     ax.set_zlabel('Z-axis')
 
-def decision_regions_2d(X, y, model, ax=None, use_proba=True, resolution=500):
+def decision_regions_2d(X, y, model, ax=None, use_proba=True, resolution=50):
     # Colormaps
     cm = plt.cm.RdBu
     ax = ax or plt.gca()

@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.datasets import make_classification, make_moons, make_circles
 
 from eml.supervised_learning.logistic_regression import LogisticRegression
+from eml.supervised_learning.kNN import KNearestNeighbors
 
 import matplotlib.pyplot as plt
 import eml.utils.plot as plot
@@ -11,9 +12,13 @@ lr = 0.001
 n_samples = 300
 
 models = [
-    LogisticRegression(n_iter, lr)]
+    LogisticRegression(n_iter, lr),
+    KNearestNeighbors(k=1),
+    KNearestNeighbors(k=5)]
 names = [
-    'LogisticRegression']
+    'LogisticRegression',
+    'kNN (k=1)',
+    'kNN (k=5)']
 datasets = [
     (make_classification(n_samples=n_samples, n_features=2, n_redundant=0, n_informative=2, n_clusters_per_class=1, class_sep=1.2)),
     (make_moons(n_samples=n_samples, noise=0.3)),
@@ -23,10 +28,9 @@ datasets = [
 fig = plt.figure(figsize=(len(datasets)*5, (len(models) + 1) * 5))
 
 for i, (X, y) in enumerate(datasets):
-    plt_idx = i*(len(models)+1) + 1
     # Plot data
+    plt_idx = i*(len(models)+1) + 1
     ax = fig.add_subplot(len(datasets), len(models) + 1, plt_idx)
-    print('outer', i*(len(models)+1)+1)
     plot.scatter_2d(X, y, ax)
     if i == 0:
         ax.set_title("Input data")

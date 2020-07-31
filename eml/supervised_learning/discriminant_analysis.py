@@ -1,6 +1,7 @@
 import numpy as np
 #from numpy.linalg import eig
 from scipy import linalg
+from scipy.stats import multivariate_normal
 
 class DiscriminantAnalysis:
 
@@ -30,7 +31,6 @@ class DiscriminantAnalysis:
         # Estimate class centroids and data centroid
         centroids = np.array([np.mean(x, axis=0) for x in X_])
         data_centroid = np.mean(X, axis=0)
-        print(data_centroid)
 
         # Between-class and within-class scatter matrices
         S_b = np.sum([X_[i].shape[0] *  np.outer(c - data_centroid, c-data_centroid) for i, c in enumerate(centroids)], axis=0)
@@ -38,19 +38,19 @@ class DiscriminantAnalysis:
 
         return S_b, S_w
 
-
 class LinearDiscriminantAnalysis(DiscriminantAnalysis):
 
     def __init__(self, n_components=None):
         self.n_components = n_components
 
     def fit(self, X, y):
-        # Set target dimensionality if not given
-        if self.n_components is None:
-            self.n_components = min(self.n_classes - 1, X.shape[1]) if self.n_classes > 1 else 1
-
         X_, self.class_priors, self.n_classes = super()._prepare_data(X, y)
-        cov, _, centroids = super()._compute_covariances(X_)
+        self.cov, _, self.centroids = super()._compute_covariances(X_)
+
+        # Determine target dimensionality if not given
+        if self.n_components is None:
+            # No information loss when projecting into vector space spanned by class centroids
+            self.n_components = min(self.n_classes - 1, X.shape[1])
 
         if self.n_components < X.shape[1]:
             # Compute scatter matrices and solve Fisher eigenproblem
@@ -58,26 +58,33 @@ class LinearDiscriminantAnalysis(DiscriminantAnalysis):
             w, V = linalg.eig(S_b, S_w)
             w, V = w.real, V.real
 
-            # Take self.n_components eigenvectors with largest eigenvalues as new basis
-            self.V_sorted = V[(-w).argsort()]
-            self.V_sorted = self.V_sorted[:self.n_components]
-        else:
-            self.V_sorted = np.identity(X.shape[1])
+            # Take self.n_components eigenvectors with largest eigenvalues as new basis/projection matrix
+            self.proj = V[(-w).argsort()][:self.n_components]
 
-        # Compute mean and shared covariance of transformed class distributions
-        cov = self.V_sorted.dot(cov).dot(self.V_sorted.T)
-        centroids = centroids.dot(self.V_sorted.T)
-        self.cov_inv = np.linalg.inv(cov)
+            # Compute mean and shared covariance of transformed class distributions
+            self.cov = self.proj.dot(self.cov).dot(self.proj.T)
+            self.centroids = self.centroids.dot(self.proj.T)
+        else:
+            self.proj = np.identity(X.shape[1])
 
     def transform(self, X):
-        X_new = X.dot(self.V_sorted.T)
+        X_new = X.dot(self.proj.T)
         return X_new
 
-    def predict(self, X):
+    def predict_proba(self, X):
+        # Project
         X_new = self.transform(X)
-        scores = X_new.dot(self.cov_inv).dot(self.centroids.T) - 0.5 * np.sum(self.centroids.dot(self.cov_inv) * self.centroids, axis=1).T + np.log(self.class_priors)
-        pred = np.argmax(scores, axis=1)
-        return pred
+
+        # Compute class posteriors P(X|cls)
+        # P(cls|X) = P(X|cls) / P(X), with P(X)=sum_{c} P(X|c)
+        posteriors = np.array([multivariate_normal.pdf(X_new, self.centroids[cls], self.cov) for cls in range(self.n_classes)]).T
+        # Divide by evidence P(X)
+        prob = posteriors / np.repeat(np.sum(posteriors,axis=1)[...,np.newaxis], posteriors.shape[1], axis=1)
+        return prob
+
+    def predict(self, X):
+        prob = self.predict_proba(X)
+        return np.argmax(prob, axis=1)
 
 class QuadraticDiscriminantAnalysis(DiscriminantAnalysis):
 
@@ -85,16 +92,14 @@ class QuadraticDiscriminantAnalysis(DiscriminantAnalysis):
         X_, self.class_priors, self.n_classes = super()._prepare_data(X, y)
         _, self.cov_, self.centroids = super()._compute_covariances(X_)
 
-        # Inverse
-        self.cov_inv_ = [np.linalg.inv(cov) for cov in self.cov_]
-
-    # Apply decision function of class c
-    def __decision_function(self, X, c):
-        X_centered = X - self.centroids[c]
-        scores = -0.5 * np.log(np.linalg.det(self.cov_[c])) - 0.5 * np.sum(X_centered.dot(self.cov_inv_[c]) * X_centered, axis=1).T + np.log(self.class_priors[c])
-        return scores
+    def predict_proba(self, X):
+        # Compute class posteriors P(X|cls)
+        # P(cls|X) = P(X|cls) / P(X), with P(X)=sum_{c} P(X|c)
+        posteriors = np.array([multivariate_normal.pdf(X, self.centroids[cls], self.cov_[cls]) for cls in range(self.n_classes)]).T
+        # Divide by evidence P(X)
+        prob = posteriors / np.repeat(np.sum(posteriors,axis=1)[...,np.newaxis], posteriors.shape[1], axis=1)
+        return prob
 
     def predict(self, X):
-        pred = np.array([self.__decision_function(X, i) for i in range(self.n_classes)])
-        pred = np.argmax(pred, axis=0)
-        return pred
+        prob = self.predict_proba
+        return np.argmax(prob, axis=1)

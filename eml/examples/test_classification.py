@@ -1,9 +1,9 @@
-import numpy as np
 from sklearn.datasets import make_classification, make_moons, make_circles
 
 from eml.supervised_learning.logistic_regression import LogisticRegression
 from eml.supervised_learning.kNN import KNearestNeighbors
 from eml.supervised_learning.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
+from eml.supervised_learning.naive_bayes import GaussianNB
 
 import matplotlib.pyplot as plt
 import eml.utils.plot as plot
@@ -15,6 +15,7 @@ n_samples = 300
 models = [
     LogisticRegression(n_iter, lr),
     LinearDiscriminantAnalysis(),
+    GaussianNB(),
     KNearestNeighbors(k=1),
     QuadraticDiscriminantAnalysis(),
 ]
@@ -22,6 +23,7 @@ models = [
 names = [
     'LogisticRegression',
     'LDA',
+    'GaussianNaiveBayes',
     'kNN (k=1)',
     'QDA']
 

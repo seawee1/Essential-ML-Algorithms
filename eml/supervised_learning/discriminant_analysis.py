@@ -75,10 +75,8 @@ class LinearDiscriminantAnalysis(DiscriminantAnalysis):
         # Project
         X_new = self.transform(X)
 
-        # Compute class posteriors P(X|cls)
-        # P(cls|X) = P(X|cls) / P(X), with P(X)=sum_{c} P(X|c)
-        posteriors = np.array([multivariate_normal.pdf(X_new, self.centroids[cls], self.cov) for cls in range(self.n_classes)]).T
-        # Divide by evidence P(X)
+        # P(cls|X) = P(X|cls) * P(cls)/ P(X), with P(X)=sum_{c} P(X|c)
+        posteriors = np.array([self.class_priors[cls] * multivariate_normal.pdf(X_new, self.centroids[cls], self.cov) for cls in range(self.n_classes)]).T
         prob = posteriors / np.repeat(np.sum(posteriors,axis=1)[...,np.newaxis], posteriors.shape[1], axis=1)
         return prob
 
@@ -93,10 +91,8 @@ class QuadraticDiscriminantAnalysis(DiscriminantAnalysis):
         _, self.cov_, self.centroids = super()._compute_covariances(X_)
 
     def predict_proba(self, X):
-        # Compute class posteriors P(X|cls)
         # P(cls|X) = P(X|cls) / P(X), with P(X)=sum_{c} P(X|c)
-        posteriors = np.array([multivariate_normal.pdf(X, self.centroids[cls], self.cov_[cls]) for cls in range(self.n_classes)]).T
-        # Divide by evidence P(X)
+        posteriors = np.array([self.class_priors[cls] * multivariate_normal.pdf(X, self.centroids[cls], self.cov_[cls]) for cls in range(self.n_classes)]).T
         prob = posteriors / np.repeat(np.sum(posteriors,axis=1)[...,np.newaxis], posteriors.shape[1], axis=1)
         return prob
 
